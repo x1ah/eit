@@ -1,2 +1,8 @@
 # eit
-A mini text editor written in Rust.
+A mini text editor written in Go.
+
+## Run
+
+```
+make run
+```
