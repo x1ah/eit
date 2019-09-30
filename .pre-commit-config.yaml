@@ -1,0 +1,7 @@
+# See http://pre-commit.com for more information
+# See http://pre-commit.com/hooks.html for more hooks
+repos:
+-   repo: https://github.com/x1ah/pre-commit-hooks
+    rev: 'master'
+    hooks:
+        -   id: go-fmt
