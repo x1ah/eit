@@ -4,10 +4,11 @@
 
 A mini text editor written in Go.
 
-## Run
+## Install
 
 ```
-make run
+$ go get -U github.com/x1ah/eit/cmd/eit
+$ eit
 ```
 
 ## Features
