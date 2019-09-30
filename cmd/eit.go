@@ -6,7 +6,6 @@ import (
 	"os"
 )
 
-
 type Content struct {
 	Runes [][]rune
 	Lines int32
@@ -97,7 +96,7 @@ func main() {
 	for {
 		text.Show(screen)
 		select {
-			case event = <-events:
+		case event = <-events:
 		}
 
 		switch e := event.(type) {
