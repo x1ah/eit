@@ -3,3 +3,6 @@ build:
 
 run: build
 	@./out/eit
+
+test:
+	echo OK
