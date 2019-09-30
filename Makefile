@@ -1,5 +1,5 @@
 build:
-	@go build -o ./out/eit cmd/eit.go
+	@go build -o ./out/eit cmd/eit/eit.go
 
 run: build
 	@./out/eit
