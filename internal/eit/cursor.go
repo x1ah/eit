@@ -17,7 +17,7 @@ func (cursor *Cursor) AtEndOfLine() bool {
 		return true
 	}
 
-	return cursor.X == len(cursor.Buffer.Runes[cursor.Buffer.Lines])
+	return cursor.X == len(cursor.Buffer.Runes[cursor.Y])
 }
 
 func (cursor *Cursor) AtBeginOfLine() bool {
@@ -65,11 +65,15 @@ func (cursor *Cursor) MoveRight() {
 	cursor.X += 1
 }
 
-func (cursor *Cursor) MoveTop() {
+func (cursor *Cursor) MoveUp() {
 	if cursor.AtFirstLineOfBuffer() {
 		return
 	} else {
 		cursor.Y -= 1
+	}
+
+	if cursor.X > len(cursor.Buffer.Runes[cursor.Y]) {
+		cursor.X = len(cursor.Buffer.Runes[cursor.Y])
 	}
 }
 
@@ -78,6 +82,10 @@ func (cursor *Cursor) MoveDown() {
 		return
 	} else {
 		cursor.Y += 1
+	}
+
+	if cursor.X > len(cursor.Buffer.Runes[cursor.Y]) {
+		cursor.X = len(cursor.Buffer.Runes[cursor.Y])
 	}
 }
 
