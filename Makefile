@@ -1,5 +1,5 @@
 build:
-	@go build -o ./out/eit cmd/eit/cli.go
+	@go build -race -o ./out/eit .
 
 run: build
 	@./out/eit
