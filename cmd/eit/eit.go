@@ -45,6 +45,12 @@ func (text *Content) ClearLine() {
 	text.Runes[text.Lines] = []rune{}
 }
 
+func (text *Content) Raw() {
+	for _, r := range text.Runes {
+		fmt.Printf("%v", string(r))
+	}
+}
+
 func (text *Content) NewLine() {
 	text.Runes = append(text.Runes, []rune{})
 	text.Lines += 1
@@ -112,6 +118,7 @@ func main() {
 				text.AddRune(e.Rune())
 			case tcell.KeyCtrlX, tcell.KeyCtrlC:
 				screen.Fini()
+				text.Raw()
 				fmt.Fprintf(os.Stdout, "bye!\n")
 				return
 			}
