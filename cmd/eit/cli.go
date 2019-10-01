@@ -1,4 +1,4 @@
-package main
+package cmd
 
 import (
 	"fmt"
@@ -7,7 +7,7 @@ import (
 	"os"
 )
 
-func main() {
+func Run() {
 	screen := eit.InitScreen()
 	config := &eit.Config{}
 	buffer := eit.NewBuffer(config)
