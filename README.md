@@ -7,7 +7,7 @@ A mini text editor written in Go.
 ## Install
 
 ```
-$ go get -u github.com/x1ah/eit/cmd/eit
+$ go get -u github.com/x1ah/eit
 $ eit
 ```
 
