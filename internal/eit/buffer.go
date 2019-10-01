@@ -1,5 +1,9 @@
 package eit
 
+import (
+	"github.com/gdamore/tcell"
+)
+
 // content of screen
 type Buffer struct {
 	// current cursor
@@ -77,9 +81,13 @@ func (buffer *Buffer) Delete() {
 			deletedLine...)
 	} else {
 		// 不在行首直接删除 rune
-		buffer.Runes[currentLine] = append(
-			buffer.Runes[currentLine][:buffer.CurrCursor.X],
-			buffer.Runes[currentLine][buffer.CurrCursor.X+1:]...)
+		if buffer.CurrCursor.AtEndOfLine() {
+			buffer.Runes[currentLine] = buffer.Runes[currentLine][:buffer.CurrCursor.X-1]
+		} else {
+			buffer.Runes[currentLine] = append(
+				buffer.Runes[currentLine][:buffer.CurrCursor.X-1],
+				buffer.Runes[currentLine][buffer.CurrCursor.X:]...)
+		}
 
 		buffer.CurrCursor.MoveLeft()
 	}
@@ -89,11 +97,23 @@ func (buffer *Buffer) NewLine() {
 	defer buffer.CurrCursor.NewLine()
 
 	buffer.Runes = append(buffer.Runes, []rune{})
-	buffer.Lines += 1
-	if buffer.Lines == 2 {
+	if buffer.Lines == 0 || buffer.CurrCursor.AtEndOfLine() {
+		buffer.Lines += 1
 		return
 	}
 
 	copy(buffer.Runes[buffer.CurrCursor.Y+1:], buffer.Runes[buffer.CurrCursor.Y:])
 	buffer.Runes[buffer.CurrCursor.Y] = []rune{}
+	buffer.Lines += 1
+}
+
+func (buffer *Buffer) Draw(screen tcell.Screen) {
+	screen.Clear()
+	for y, line := range buffer.Runes {
+		for x, char := range line {
+			screen.SetContent(x, y, char, nil, tcell.StyleDefault.Foreground(tcell.ColorWhite))
+		}
+	}
+	screen.ShowCursor(buffer.CurrCursor.X, buffer.CurrCursor.Y)
+	screen.Show()
 }
