@@ -36,6 +36,14 @@ func main() {
 				buffer.NewLine()
 			case tcell.KeyRune:
 				buffer.InsertRune(e.Rune())
+			case tcell.KeyLeft:
+				buffer.CurrCursor.MoveLeft()
+			case tcell.KeyRight:
+				buffer.CurrCursor.MoveRight()
+			case tcell.KeyUp:
+				buffer.CurrCursor.MoveUp()
+			case tcell.KeyDown:
+				buffer.CurrCursor.MoveDown()
 			case tcell.KeyCtrlX, tcell.KeyCtrlC:
 				screen.Fini()
 				fmt.Fprintf(os.Stdout, "bye!\n")
