@@ -2,6 +2,9 @@ package eit
 
 import (
 	"github.com/gdamore/tcell"
+	"io/ioutil"
+	"os"
+	"strings"
 )
 
 // content of screen
@@ -18,14 +21,58 @@ type Buffer struct {
 	Config *Config
 }
 
-func NewBuffer(config *Config) *Buffer {
+func NewBuffer(config *Config) (buf *Buffer, err error) {
 	cursor := new(Cursor)
-	buf := &Buffer{
+	buf = &Buffer{
 		CurrCursor: cursor,
 		Config:     config,
 	}
 	cursor.Buffer = buf
-	return buf
+	err = buf.LoadFromFile(config.FilePath)
+	return buf, err
+}
+
+func (buffer *Buffer) LoadFromFile(filepath string) error {
+
+	if filepath == "" {
+		return nil
+	}
+
+	// file not exist
+	if _, err := os.Stat(filepath); os.IsNotExist(err) {
+		return nil
+	}
+
+	data, err := ioutil.ReadFile(filepath)
+	if err != nil {
+		return err
+	}
+
+	left := 0
+	for cursor, b := range data {
+		if b == byte('\n') {
+			buffer.AddLine([]rune(string(data[left:cursor])))
+			left = cursor + 1
+		}
+	}
+
+	if left != len(data) {
+		buffer.AddLine([]rune(string(data[left:])))
+	}
+	return nil
+}
+
+func (buffer *Buffer) SaveAs() (err error) {
+	if buffer.Config.FilePath == "" {
+		return
+	}
+	err = ioutil.WriteFile(buffer.Config.FilePath, []byte(buffer.String()), 0644)
+	return err
+}
+
+func (buffer *Buffer) AddLine(line []rune) {
+	buffer.Runes = append(buffer.Runes, line)
+	buffer.Lines = len(buffer.Runes) - 1
 }
 
 // Is current buffer empty
@@ -116,4 +163,13 @@ func (buffer *Buffer) Draw(screen tcell.Screen) {
 	}
 	screen.ShowCursor(buffer.CurrCursor.X, buffer.CurrCursor.Y)
 	screen.Show()
+}
+
+func (buffer *Buffer) String() string {
+	s := make([]string, buffer.Lines+1)
+	for i, rs := range buffer.Runes {
+		s[i] = string(rs)
+	}
+
+	return strings.Join(s, "\n")
 }

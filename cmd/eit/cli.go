@@ -9,8 +9,15 @@ import (
 
 func Run() {
 	screen := eit.InitScreen()
-	config := &eit.Config{}
-	buffer := eit.NewBuffer(config)
+	filepath := ""
+	if len(os.Args) >= 2 {
+		filepath = os.Args[1]
+	}
+	config := &eit.Config{FilePath: filepath}
+	buffer, err := eit.NewBuffer(config)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "%s", err)
+	}
 
 	events := make(chan tcell.Event)
 	var event tcell.Event
@@ -44,6 +51,8 @@ func Run() {
 				buffer.CurrCursor.MoveUp()
 			case tcell.KeyDown:
 				buffer.CurrCursor.MoveDown()
+			case tcell.KeyCtrlS:
+				buffer.SaveAs()
 			case tcell.KeyCtrlX, tcell.KeyCtrlC:
 				screen.Fini()
 				fmt.Fprintf(os.Stdout, "bye!\n")
