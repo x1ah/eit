@@ -141,10 +141,10 @@ func (buffer *Buffer) Delete() {
 }
 
 func (buffer *Buffer) NewLine() {
-	defer buffer.CurrCursor.NewLine()
+	buffer.CurrCursor.NewLine()
 
 	buffer.Runes = append(buffer.Runes, []rune{})
-	if buffer.Lines == 0 || buffer.CurrCursor.AtEndOfLine() {
+	if buffer.Lines == 0 {
 		buffer.Lines += 1
 		return
 	}
